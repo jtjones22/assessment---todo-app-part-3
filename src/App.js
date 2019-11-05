@@ -6,6 +6,18 @@ class App extends Component {
   state = {
     todos: todosList
   };
+  handleDeleteTodo = (event, todoIdToDelete) => {
+    const newTodoList = this.state.todos.filter(
+      todo => todo.id !== todoIdToDelete
+    );
+    this.setState({ todos: newTodoList });
+  };
+
+  handleCreateTodo = (event) => {
+    
+  }
+
+
   render() {
     return (
       <section className="todoapp">
@@ -15,12 +27,16 @@ class App extends Component {
             className="new-todo"
             placeholder="What needs to be done?"
             autofocus
+            onKeyDown={this.handleCreateTodo}
           />
         </header>
-        <TodoList todos={this.state.todos} />
+        <TodoList 
+        handleDeleteTodo={this.handleDeleteTodo} 
+        todos={this.state.todos}
+        />
         <footer className="footer">
           <span className="todo-count">
-            <strong>0</strong> item(s) left
+            <strong>{this.state.todos.length}</strong> item(s) left
           </span>
           <button className="clear-completed">Clear completed</button>
         </footer>
@@ -38,9 +54,11 @@ class TodoItem extends Component {
             className="toggle"
             type="checkbox"
             checked={this.props.completed}
-          />
+            />
           <label>{this.props.title}</label>
-          <button className="destroy" />
+          <button 
+          className="destroy" 
+          onClick={this.props.handleDeleteTodo} />
         </div>
       </li>
     );
@@ -53,8 +71,12 @@ class TodoList extends Component {
       <section className="main">
         <ul className="todo-list">
           {this.props.todos.map(todo => (
-            <TodoItem title={todo.title} completed={todo.completed} />
-          ))}
+            <TodoItem
+            handleDeleteTodo={event => this.props.handleDeleteTodo(event, todo.id)}
+            title={todo.title}
+            completed={todo.completed}
+            />
+            ))}
         </ul>
       </section>
     );
