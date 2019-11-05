@@ -4,7 +4,8 @@ import todosList from "./todos.json";
 
 class App extends Component {
   state = {
-    todos: todosList
+    todos: todosList,
+    value: ""
   };
   handleDeleteTodo = (event, todoIdToDelete) => {
     const newTodoList = this.state.todos.filter(
@@ -13,10 +14,26 @@ class App extends Component {
     this.setState({ todos: newTodoList });
   };
 
-  handleCreateTodo = (event) => {
-    
-  }
+  handleCreateTodo = event => {
+    if (event.key === "Enter" && this.state.value.length !== 0) {
+      const newTodoList = this.state.todos.slice();
+      newTodoList.push({
+        userId: 1,
+        id: Math.floor(Math.random() * 1000000),
+        title:
+          this.state.value,
+        completed: false
+      });
+      this.setState({ 
+        todos: newTodoList,
+        value: ""
+      });
+    }
+  };
 
+  handleChangeTodo = event => {
+    this.setState({ value: event.target.value });
+  };
 
   render() {
     return (
@@ -28,11 +45,14 @@ class App extends Component {
             placeholder="What needs to be done?"
             autofocus
             onKeyDown={this.handleCreateTodo}
+            onChange={this.handleChangeTodo}
+            value={this.state.value}
+            //Controlled Compontent
           />
         </header>
-        <TodoList 
-        handleDeleteTodo={this.handleDeleteTodo} 
-        todos={this.state.todos}
+        <TodoList
+          handleDeleteTodo={this.handleDeleteTodo}
+          todos={this.state.todos}
         />
         <footer className="footer">
           <span className="todo-count">
@@ -54,11 +74,9 @@ class TodoItem extends Component {
             className="toggle"
             type="checkbox"
             checked={this.props.completed}
-            />
+          />
           <label>{this.props.title}</label>
-          <button 
-          className="destroy" 
-          onClick={this.props.handleDeleteTodo} />
+          <button className="destroy" onClick={this.props.handleDeleteTodo} />
         </div>
       </li>
     );
@@ -72,11 +90,13 @@ class TodoList extends Component {
         <ul className="todo-list">
           {this.props.todos.map(todo => (
             <TodoItem
-            handleDeleteTodo={event => this.props.handleDeleteTodo(event, todo.id)}
-            title={todo.title}
-            completed={todo.completed}
+              handleDeleteTodo={event =>
+                this.props.handleDeleteTodo(event, todo.id)
+              }
+              title={todo.title}
+              completed={todo.completed}
             />
-            ))}
+          ))}
         </ul>
       </section>
     );
