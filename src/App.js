@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import "./index.css";
 import todosList from "./todos.json";
+import { Route, NavLink } from "react-router-dom";
+import TodoItem from "./TodoItem";
+import TodoList from "./TodoList";
 
 class App extends Component {
   state = {
@@ -51,7 +54,7 @@ class App extends Component {
     this.setState({ value: event.target.value });
   };
 
-  clearCompletedTodos = (event) => {
+  clearCompletedTodos = event => {
     const newArray = this.state.todos.filter(todo => todo.completed === false);
     this.setState({ todos: newArray });
   };
@@ -71,64 +74,74 @@ class App extends Component {
             //Controlled Compontent
           />
         </header>
-        <TodoList
-          handleToggleCompleted={this.handleToggleCompleted}
-          handleDeleteTodo={this.handleDeleteTodo}
-          todos={this.state.todos}
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <TodoList
+              handleToggleCompleted={this.handleToggleCompleted}
+              handleDeleteTodo={this.handleDeleteTodo}
+              todos={this.state.todos}
+            />
+          )}
+        />
+        <Route
+          path="/active"
+          render={() => (
+            <TodoList
+              handleToggleCompleted={this.handleToggleCompleted}
+              handleDeleteTodo={this.handleDeleteTodo}
+              todos={this.state.todos.filter(todo => todo.completed === false)}
+            />
+          )}
+        />
+        <Route
+          path="/completed"
+          render={() => (
+            <TodoList
+              handleToggleCompleted={this.handleToggleCompleted}
+              handleDeleteTodo={this.handleDeleteTodo}
+              todos={this.state.todos.filter(todo => todo.completed === true)}
+            />
+          )}
         />
         <footer className="footer">
           <span className="todo-count">
-            <strong>{this.state.todos.length}</strong> item(s) left
+            <strong>
+              {
+                this.state.todos.filter(todo => {
+                  todo.completed === false;
+                }).length
+              }
+            </strong>{" "}
+            item(s) left
           </span>
-          <button 
-          className="clear-completed"
-          onClick={event => {this.clearCompletedTodos(event)}}>
+          <ul className="filters">
+            <li>
+              <NavLink exact to="/" activeClassName="selected">
+                All
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/active" activeClassName="selected">
+                Active
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/completed" activeClassName="selected">
+                Completed
+              </NavLink>
+            </li>
+          </ul>
+          <button
+            className="clear-completed"
+            onClick={event => {
+              this.clearCompletedTodos(event);
+            }}
+          >
             Clear completed
-            </button>
+          </button>
         </footer>
-      </section>
-    );
-  }
-}
-
-class TodoItem extends Component {
-  render() {
-    return (
-      <li className={this.props.completed ? "completed" : ""}>
-        <div className="view">
-          <input
-            className="toggle"
-            type="checkbox"
-            checked={this.props.completed}
-            onChange={this.props.handleToggleCompleted}
-          />
-          <label>{this.props.title}</label>
-          <button className="destroy" onClick={this.props.handleDeleteTodo} />
-        </div>
-      </li>
-    );
-  }
-}
-
-class TodoList extends Component {
-  render() {
-    return (
-      <section className="main">
-        <ul className="todo-list">
-          {this.props.todos.map(todo => (
-            <TodoItem
-              key={todo.id}
-              handleDeleteTodo={event =>
-                this.props.handleDeleteTodo(event, todo.id)
-              }
-              handleToggleCompleted={event =>
-                this.props.handleToggleCompleted(event, todo.id)
-              }
-              title={todo.title}
-              completed={todo.completed}
-            />
-          ))}
-        </ul>
       </section>
     );
   }
