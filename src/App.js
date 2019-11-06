@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "./index.css";
 import todosList from "./todos.json";
 import { Route, NavLink } from "react-router-dom";
-import TodoItem from "./TodoItem";
 import TodoList from "./TodoList";
 
 class App extends Component {
@@ -108,11 +107,7 @@ class App extends Component {
         <footer className="footer">
           <span className="todo-count">
             <strong>
-              {
-                this.state.todos.filter(todo => {
-                  todo.completed === false;
-                }).length
-              }
+              {this.state.todos.filter(todo => todo.completed === false).length}
             </strong>{" "}
             item(s) left
           </span>
