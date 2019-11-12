@@ -3,6 +3,8 @@ import "./index.css";
 import todosList from "./todos.json";
 import { Route, NavLink } from "react-router-dom";
 import TodoList from "./TodoList";
+import { connect } from 'react-redux'
+import { clearCompletedTodos, addTodo } from "./actions";
 
 class App extends Component {
   state = {
@@ -10,59 +12,22 @@ class App extends Component {
     value: ""
   };
 
-  handleDeleteTodo = (event, todoIdToDelete) => {
-    const newTodoList = this.state.todos.filter(
-      todo => todo.id !== todoIdToDelete
-    );
-    this.setState({ todos: newTodoList });
-  };
-
   handleCreateTodo = event => {
     if (event.key === "Enter" && this.state.value.length !== 0) {
-      const newTodoList = this.state.todos.slice();
-      newTodoList.push({
-        userId: 1,
-        id: Math.floor(Math.random() * 1000000),
-        title: this.state.value,
-        completed: false
-      });
-      this.setState({
-        todos: newTodoList,
-        value: ""
-      });
+      this.props.addTodo(this.state.value)
+      this.setState({ value: "" })
     }
-  };
-
-  handleToggleCompleted = (event, todoToCheckCompletedId) => {
-    const newArray = this.state.todos.map(todo => {
-      if (todo.id === todoToCheckCompletedId) {
-        const newItem = { ...todo };
-
-        newItem.completed = !newItem.completed;
-
-        return newItem;
-      }
-
-      return todo;
-    });
-
-    this.setState({ todos: newArray });
   };
 
   handleChangeTodo = event => {
     this.setState({ value: event.target.value });
   };
 
-  clearCompletedTodos = event => {
-    const newArray = this.state.todos.filter(todo => todo.completed === false);
-    this.setState({ todos: newArray });
-  };
-
   render() {
     return (
       <section className="todoapp">
         <header className="header">
-          <h1>todos</h1>
+          <h1>TODOS</h1>
           <input
             className="new-todo"
             placeholder="What needs to be done?"
@@ -78,9 +43,7 @@ class App extends Component {
           path="/"
           render={() => (
             <TodoList
-              handleToggleCompleted={this.handleToggleCompleted}
-              handleDeleteTodo={this.handleDeleteTodo}
-              todos={this.state.todos}
+              todos={this.props.todos}
             />
           )}
         />
@@ -90,7 +53,7 @@ class App extends Component {
             <TodoList
               handleToggleCompleted={this.handleToggleCompleted}
               handleDeleteTodo={this.handleDeleteTodo}
-              todos={this.state.todos.filter(todo => todo.completed === false)}
+              todos={this.props.todos.filter(todo => todo.completed === false)}
             />
           )}
         />
@@ -100,14 +63,14 @@ class App extends Component {
             <TodoList
               handleToggleCompleted={this.handleToggleCompleted}
               handleDeleteTodo={this.handleDeleteTodo}
-              todos={this.state.todos.filter(todo => todo.completed === true)}
+              todos={this.props.todos.filter(todo => todo.completed === true)}
             />
           )}
         />
         <footer className="footer">
           <span className="todo-count">
             <strong>
-              {this.state.todos.filter(todo => todo.completed === false).length}
+              {this.props.todos.filter(todo => todo.completed === false).length}
             </strong>{" "}
             item(s) left
           </span>
@@ -130,8 +93,8 @@ class App extends Component {
           </ul>
           <button
             className="clear-completed"
-            onClick={event => {
-              this.clearCompletedTodos(event);
+            onClick={() => {
+              this.props.clearCompletedTodos();
             }}
           >
             Clear completed
@@ -142,4 +105,20 @@ class App extends Component {
   }
 }
 
-export default App;
+// mapStateToProps
+
+const mapStateToProps = state => {
+  return {
+    todos: state.todos
+  }
+}
+
+const mapDispatchToProps = {
+  clearCompletedTodos,
+  addTodo
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

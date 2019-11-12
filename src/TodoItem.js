@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { toggleTodo, deleteTodo } from "./actions";
 
 class TodoItem extends Component {
   render() {
@@ -9,14 +11,25 @@ class TodoItem extends Component {
             className="toggle"
             type="checkbox"
             checked={this.props.completed}
-            onChange={this.props.handleToggleCompleted}
+            onChange={event => this.props.toggleTodo(this.props.id)}
           />
           <label>{this.props.title}</label>
-          <button className="destroy" onClick={this.props.handleDeleteTodo} />
+          <button
+            className="destroy"
+            onClick={event => this.props.deleteTodo(this.props.id)}
+          />
         </div>
       </li>
     );
   }
 }
 
-export default TodoItem
+const mapDispatchToProps = {
+  toggleTodo,
+  deleteTodo
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(TodoItem);

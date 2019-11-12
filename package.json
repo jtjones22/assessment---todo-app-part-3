@@ -2,12 +2,14 @@
   "name": "todos",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jtjones22.gitlab.io/assessment---todo-app-part-2",
+  "homepage": "https://jtjones22.gitlab.io/assessment---todo-app-part-3",
   "dependencies": {
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
+    "react-redux": "^7.1.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.2.0"
+    "react-scripts": "^3.2.0",
+    "redux": "^4.0.4"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -26,5 +28,16 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "devDependencies": {}
+  "devDependencies": {},
+  "description": "Fork then clone this repository: [https://gitlab.com/kenzie-academy/se/fe/react/assessment---todo-app-part-1](https://gitlab.com/kenzie-academy/se/fe/react/assessment---todo-app-part-1)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/jtjones22/assessment---todo-app-part-3.git"
+  },
+  "author": "Jonathan Jones",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/jtjones22/assessment---todo-app-part-3/issues"
+  }
 }
