@@ -32,7 +32,7 @@ export const clearCompletedTodos = () => {
   };
 };
 
-export const addTodo = (todoTitle) => {
+export const addTodo = todoTitle => {
   const newTodo = {
     userId: 1,
     id: Math.floor(Math.random() * 1000000),
